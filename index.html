@@ -1,534 +1,531 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<title>Мастер умножения — Интерактивный урок</title>
-<style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-        font-family: 'Comic Sans MS', 'Trebuchet MS', sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
-        padding: 20px;
-        color: #333;
-    }
-    .container {
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-    .header {
-        text-align: center;
-        background: white;
-        padding: 30px;
-        border-radius: 20px;
-        margin-bottom: 30px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
-    .header h1 {
-        font-size: 42px;
-        color: #667eea;
-        margin-bottom: 10px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-    }
-    .header p {
-        font-size: 18px;
-        color: #666;
-        margin-bottom: 15px;
-    }
-    .progress-bar {
-        background: #e0e0e0;
-        border-radius: 20px;
-        height: 30px;
-        overflow: hidden;
-        margin: 15px 0;
-    }
-    .progress-fill {
-        background: linear-gradient(90deg, #11998e, #38ef7d);
-        height: 100%;
-        width: 0%;
-        transition: width 0.5s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: bold;
-    }
-    .stats {
-        display: flex;
-        justify-content: space-around;
-        margin-top: 15px;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-    .stat-box {
-        background: #f5f5f5;
-        padding: 10px 20px;
-        border-radius: 10px;
-        font-weight: bold;
-    }
-    .stat-box.correct { color: #4caf50; }
-    .stat-box.wrong { color: #f44336; }
-    .stat-box.total { color: #2196f3; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мастер Деления: Интерактивный Тренажер</title>
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --success: #00b894;
+            --error: #d63031;
+            --bg: #dfe6e9;
+            --card-bg: #ffffff;
+        }
 
-    .section-title {
-        background: white;
-        padding: 15px 25px;
-        border-radius: 15px;
-        margin: 25px 0 15px 0;
-        font-size: 24px;
-        color: #333;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    .section-title .emoji { font-size: 32px; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            padding: 20px;
+            color: #2d3436;
+        }
 
-    .cards-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 20px;
-        margin-bottom: 30px;
-    }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
 
-    .card-container {
-        perspective: 1000px;
-        height: 280px;
-        cursor: pointer;
-    }
-    .card {
-        width: 100%;
-        height: 100%;
-        position: relative;
-        transform-style: preserve-3d;
-        transition: transform 0.6s;
-    }
-    .card.flipped {
-        transform: rotateY(180deg);
-    }
-    .card-face {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        backface-visibility: hidden;
-        border-radius: 20px;
-        padding: 25px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    }
-    .card-front {
-        background: white;
-    }
-    .card-back {
-        background: linear-gradient(135deg, #11998e, #38ef7d);
-        color: white;
-        transform: rotateY(180deg);
-    }
-    .card-number {
-        position: absolute;
-        top: 10px;
-        left: 15px;
-        background: #667eea;
-        color: white;
-        padding: 5px 12px;
-        border-radius: 15px;
-        font-size: 14px;
-        font-weight: bold;
-    }
-    .card-task {
-        font-size: 28px;
-        font-weight: bold;
-        color: #333;
-        text-align: center;
-        margin: 15px 0;
-    }
-    .card-hint {
-        font-size: 14px;
-        color: #888;
-        text-align: center;
-        font-style: italic;
-    }
-    .card-answer {
-        font-size: 42px;
-        font-weight: bold;
-        text-align: center;
-        margin: 15px 0;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-    }
-    .card-answer-label {
-        font-size: 16px;
-        opacity: 0.9;
-        margin-bottom: 10px;
-    }
-    .card-status {
-        position: absolute;
-        top: 10px;
-        right: 15px;
-        font-size: 24px;
-    }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-    .intro-card {
-        background: white;
-        padding: 30px;
-        border-radius: 20px;
-        margin-bottom: 25px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        border-left: 8px solid #ffc107;
-    }
-    .intro-card h2 {
-        color: #ff9800;
-        margin-bottom: 15px;
-        font-size: 26px;
-    }
-    .intro-card ol {
-        margin-left: 25px;
-        line-height: 1.8;
-        font-size: 16px;
-    }
-    .intro-card li { margin-bottom: 8px; }
+        h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+        }
 
-    .example-box {
-        background: #fff8e1;
-        border: 2px solid #ffc107;
-        border-radius: 12px;
-        padding: 20px;
-        margin: 15px 0;
-        font-family: 'Courier New', monospace;
-        font-size: 18px;
-    }
-    .example-box .title {
-        font-weight: bold;
-        color: #f57c00;
-        margin-bottom: 10px;
-        font-family: 'Comic Sans MS', sans-serif;
-    }
+        .subtitle {
+            font-size: 1.2rem;
+            color: #636e72;
+        }
 
-    .final-card {
-        background: linear-gradient(135deg, #fa709a, #fee140);
-        padding: 40px;
-        border-radius: 20px;
-        text-align: center;
-        color: white;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        margin-top: 30px;
-    }
-    .final-card h2 {
-        font-size: 36px;
-        margin-bottom: 20px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-    }
-    .final-card .score {
-        font-size: 72px;
-        font-weight: bold;
-        margin: 20px 0;
-        text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
-    }
-    .final-card .grade {
-        font-size: 28px;
-        background: rgba(255,255,255,0.3);
-        padding: 15px 30px;
-        border-radius: 15px;
-        display: inline-block;
-        margin-top: 15px;
-    }
+        /* Карточки уровней */
+        .level-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            border-left: 10px solid var(--primary);
+            opacity: 0.5;
+            pointer-events: none;
+            filter: grayscale(100%);
+        }
 
-    .btn-reset {
-        background: white;
-        color: #fa709a;
-        border: none;
-        padding: 15px 40px;
-        font-size: 20px;
-        border-radius: 30px;
-        cursor: pointer;
-        margin-top: 20px;
-        font-weight: bold;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        transition: transform 0.2s;
-    }
-    .btn-reset:hover { transform: scale(1.05); }
+        .level-card.active {
+            opacity: 1;
+            pointer-events: all;
+            filter: grayscale(0%);
+            transform: scale(1);
+            border-left-color: var(--success);
+        }
 
-    .bonus-section {
-        background: white;
-        padding: 25px;
-        border-radius: 20px;
-        margin-top: 25px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        border: 3px dashed #9c27b0;
-    }
-    .bonus-section h3 {
-        color: #9c27b0;
-        margin-bottom: 15px;
-        font-size: 22px;
-    }
-    .bonus-section ul {
-        margin-left: 25px;
-        line-height: 1.8;
-    }
+        .level-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f1f2f6;
+            padding-bottom: 10px;
+        }
 
-    @media print {
-        body { background: white; }
-        .card-container { break-inside: avoid; }
-        .btn-reset { display: none; }
-    }
-    @media (max-width: 600px) {
-        .header h1 { font-size: 28px; }
-        .card-task { font-size: 22px; }
-        .card-answer { font-size: 32px; }
-    }
-</style>
+        .level-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .badge {
+            background: var(--secondary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        /* Сетка заданий */
+        .tasks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .task-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .task-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        input[type="number"] {
+            width: 100px;
+            padding: 8px;
+            border: 2px solid #b2bec3;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            border-color: var(--primary);
+        }
+
+        input.correct {
+            border-color: var(--success);
+            background-color: #e6fffa;
+            color: var(--success);
+        }
+
+        input.wrong {
+            border-color: var(--error);
+            background-color: #ffeaea;
+            animation: shake 0.5s;
+        }
+
+        /* Таблица 3.78 */
+        .magic-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .magic-table th, .magic-table td {
+            border: 1px solid #dfe6e9;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .magic-table th {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .magic-table input {
+            width: 80%;
+        }
+
+        /* Кнопки и прогресс */
+        .check-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            transition: background 0.3s;
+            font-weight: bold;
+        }
+
+        .check-btn:hover {
+            background: #5649c0;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #dfe6e9;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), var(--primary));
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .final-message {
+            display: none;
+            text-align: center;
+            background: linear-gradient(135deg, #00b894, #00cec9);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin-top: 30px;
+            animation: popIn 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* Адаптив для мобильных */
+        @media (max-width: 600px) {
+            .tasks-grid { grid-template-columns: 1fr; }
+            h1 { font-size: 1.8rem; }
+            .magic-table { font-size: 0.9rem; }
+        }
+    </style>
 </head>
 <body>
 
 <div class="container">
+    <header>
+        <h1>🧮 Мастер Деления</h1>
+        <div class="subtitle">Пройди все уровни, чтобы стать экспертом!</div>
+    </header>
 
-    <div class="header">
-        <h1>🎯 Мастер умножения</h1>
-        <p>Дистанционный урок-квест для 5 класса</p>
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressFill">0%</div>
+    <div class="progress-bar">
+        <div class="progress-fill" id="totalProgress"></div>
+    </div>
+
+    <!-- УРОВЕНЬ 1: Базовое деление (3.80) -->
+    <div class="level-card active" id="level1">
+        <div class="level-header">
+            <span class="level-title">Уровень 1: Базовое деление</span>
+            <span class="badge">Задание 3.80</span>
         </div>
-        <div class="stats">
-            <div class="stat-box total">Всего: <span id="totalCount">0</span>/16</div>
-            <div class="stat-box correct">✅ Решено: <span id="correctCount">0</span></div>
-            <div class="stat-box wrong">❌ Ошибок: <span id="wrongCount">0</span></div>
+        <div class="tasks-grid">
+            <div class="task-item">
+                <span class="task-text">а) 91 : 7</span>
+                <input type="number" data-answer="13" placeholder="?">
+            </div>
+            <div class="task-item">
+                <span class="task-text">б) 216 : 18</span>
+                <input type="number" data-answer="12" placeholder="?">
+            </div>
+            <div class="task-item">
+                <span class="task-text">в) 6817 : 17</span>
+                <input type="number" data-answer="401" placeholder="?">
+            </div>
+            <div class="task-item">
+                <span class="task-text">г) 240 824 : 8</span>
+                <input type="number" data-answer="30103" placeholder="?">
+            </div>
         </div>
+        <button class="check-btn" onclick="checkLevel(1)">Проверить Уровень 1</button>
     </div>
 
-    <div class="intro-card">
-        <h2>📜 Как пройти квест</h2>
-        <ol>
-            <li>Открой карточку — увидишь пример на умножение.</li>
-            <li>Реши пример <strong>в столбик в тетради</strong>.</li>
-            <li>Нажми на карточку — она перевернётся и покажет ответ.</li>
-            <li>Сравни свой ответ с правильным:
-                <ul style="margin-left: 20px; margin-top: 5px;">
-                    <li>Если ответ верный — нажми <strong>✅ Правильно</strong></li>
-                    <li>Если ошибся — нажми <strong>❌ Ошибка</strong> и разберись, где</li>
-                </ul>
-            </li>
-            <li>Пройди все 16 карточек и получи свою оценку!</li>
-        </ol>
-    </div>
-
-    <div class="intro-card" style="border-left-color: #2196f3;">
-        <h2 style="color: #2196f3;">📐 Напоминание: умножение в столбик</h2>
-        <div class="example-box">
-            <div class="title">Пример: 57 × 34</div>
-            &nbsp;&nbsp;&nbsp;5 7<br>
-            ×&nbsp;3 4<br>
-            -----<br>
-            &nbsp;2 2 8 &nbsp;&nbsp;← 57 × 4<br>
-            1 7 1 &nbsp;&nbsp;&nbsp;← 57 × 3 (сдвиг на 1 клетку)<br>
-            -----<br>
-            1 9 3 8 &nbsp;&nbsp;← складываем<br>
+    <!-- УРОВЕНЬ 2: Деление на круглые числа (3.81) -->
+    <div class="level-card" id="level2">
+        <div class="level-header">
+            <span class="level-title">Уровень 2: Круглые числа</span>
+            <span class="badge">Задание 3.81</span>
         </div>
-        <div class="example-box">
-            <div class="title">Правило: умножение на 10, 100, 1000...</div>
-            48 × 100 = 4800 (приписываем 2 нуля)<br>
-            405 × 30000 = 12 150 000 (405 × 3 = 1215, приписываем 4 нуля)
+        <p style="margin-bottom: 15px; color: #636e72;">💡 Подсказка: при делении на 10, 100, 1000 просто отбрасывай нули!</p>
+        <div class="tasks-grid">
+            <div class="task-item">
+                <span class="task-text">а) 21 700 : 10</span>
+                <input type="number" data-answer="2170" placeholder="?">
+            </div>
+            <div class="task-item">
+                <span class="task-text">б) 6 123 000 : 100</span>
+                <input type="number" data-answer="61230" placeholder="?">
+            </div>
+            <div class="task-item">
+                <span class="task-text">в) 290 000 : 1000</span>
+                <input type="number" data-answer="290" placeholder="?">
+            </div>
+            <div class="task-item">
+                <span class="task-text">г) 204 400 : 200</span>
+                <input type="number" data-answer="1022" placeholder="?">
+            </div>
         </div>
+        <button class="check-btn" onclick="checkLevel(2)">Проверить Уровень 2</button>
     </div>
 
-    <!-- ЗАДАНИЕ 3.11 -->
-    <div class="section-title">
-        <span class="emoji">🥉</span>
-        <span>Задание 3.11 — Базовый уровень (4 карточки)</span>
+    <!-- УРОВЕНЬ 3: Магическая таблица (3.78) -->
+    <div class="level-card" id="level3">
+        <div class="level-header">
+            <span class="level-title">Уровень 3: Магическая таблица</span>
+            <span class="badge">Задание 3.78</span>
+        </div>
+        <p style="margin-bottom: 15px; color: #636e72;">🔮 Введи любые два числа в строку, и третье появится само! (Не дели на ноль)</p>
+        
+        <table class="magic-table">
+            <thead>
+                <tr>
+                    <th>Параметр</th>
+                    <th>Колонка 1</th>
+                    <th>Колонка 2</th>
+                    <th>Колонка 3</th>
+                    <th>Колонка 4</th>
+                    <th>Колонка 5</th>
+                    <th>Колонка 6</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Генерируется через JS -->
+            </tbody>
+        </table>
+        <button class="check-btn" onclick="checkLevel(3)">Завершить Урок</button>
     </div>
-    <div class="cards-grid" id="grid311"></div>
-
-    <!-- ЗАДАНИЕ 3.12 -->
-    <div class="section-title">
-        <span class="emoji">🥈</span>
-        <span>Задание 3.12 — Средний уровень (4 карточки)</span>
-    </div>
-    <div class="cards-grid" id="grid312"></div>
-
-    <!-- ЗАДАНИЕ 3.13 -->
-    <div class="section-title">
-        <span class="emoji">🥇</span>
-        <span>Задание 3.13 — Продвинутый уровень (4 карточки)</span>
-    </div>
-    <div class="cards-grid" id="grid313"></div>
-
-    <!-- ЗАДАНИЕ 3.14 -->
-    <div class="section-title">
-        <span class="emoji">💎</span>
-        <span>Задание 3.14 — Уровень мастера (4 карточки)</span>
-    </div>
-    <div class="cards-grid" id="grid314"></div>
 
     <!-- ФИНАЛ -->
-    <div class="final-card" id="finalCard" style="display: none;">
-        <h2>🏆 Квест пройден!</h2>
-        <div class="score" id="finalScore">0/16</div>
-        <div>правильных ответов</div>
-        <div class="grade" id="finalGrade">Оценка: —</div>
-        <br>
-        <button class="btn-reset" onclick="resetAll()">🔄 Начать заново</button>
-    </div>
-
-    <!-- БОНУС -->
-    <div class="bonus-section">
-        <h3>🌟 Бонусные задания (если осталось время)</h3>
-        <ul>
-            <li><strong>А.</strong> Придумай и реши 3 своих примера на умножение двузначного числа на двузначное.</li>
-            <li><strong>Б.</strong> Запиши своими словами правило умножения на 10, 100, 1000 (стр. 80 учебника).</li>
-            <li><strong>В.</strong> Реши задачу 3.10 из учебника (про возраст Володи и его мамы).</li>
-        </ul>
-    </div>
-
-    <div class="intro-card" style="border-left-color: #4caf50; margin-top: 25px;">
-        <h2 style="color: #4caf50;">📋 Что сделать на очном уроке</h2>
-        <ol>
-            <li>Принести тетрадь со всеми решениями в столбик.</li>
-            <li>Показать учителю эту страницу с результатами.</li>
-            <li>Разобрать ошибки (если есть).</li>
-            <li>Получить итоговую оценку.</li>
-        </ol>
+    <div class="final-message" id="finalMessage">
+        <h2>🎉 Поздравляем! 🎉</h2>
+        <p style="font-size: 1.2rem;">Ты прошел все испытания и стал настоящим Мастером Деления!</p>
+        <p>Сделай скриншот этого экрана и покажи учителю.</p>
+        <button class="check-btn" style="background: white; color: var(--success); margin-top: 20px;" onclick="location.reload()">Пройти заново</button>
     </div>
 
 </div>
 
 <script>
-    const tasks = {
-        311: [
-            { task: "155 × 9", answer: "1 395" },
-            { task: "57 × 34", answer: "1 938" },
-            { task: "296 × 8", answer: "2 368" },
-            { task: "68 × 93", answer: "6 324" }
-        ],
-        312: [
-            { task: "667 × 14", answer: "9 338" },
-            { task: "705 × 29", answer: "20 445" },
-            { task: "718 × 208", answer: "149 344" },
-            { task: "303 × 406", answer: "123 018" }
-        ],
-        313: [
-            { task: "3574 × 742", answer: "2 651 908" },
-            { task: "6405 × 907", answer: "5 809 335" },
-            { task: "2218 × 2244", answer: "4 977 192" },
-            { task: "3004 × 5005", answer: "15 035 020" }
-        ],
-        314: [
-            { task: "48 × 100", answer: "4 800" },
-            { task: "405 × 30 000", answer: "12 150 000" },
-            { task: "6700 × 89 000", answer: "596 300 000" },
-            { task: "1020 × 3 400 000", answer: "3 468 000 000" }
-        ]
-    };
+    // Данные для таблицы 3.78
+    // Структура: [Делимое, Делитель, Частное] - null означает поле для ввода
+    const tableData = [
+        [196, 7, null],      // Найти частное (28)
+        [null, 6, 36],       // Найти делимое (216) - исправлено по логике задачи
+        [null, 12, 14],      // Найти делимое (168)
+        [1000, 125, null],   // Найти частное (8)
+        [375, null, 25],     // Найти делитель (15)
+        [null, 105, 90]      // Найти делимое (9450)
+    ];
 
-    const colors = {
-        311: ['#ff6b6b', '#ee5a6f'],
-        312: ['#4facfe', '#00f2fe'],
-        313: ['#f093fb', '#f5576c'],
-        314: ['#fa709a', '#fee140']
-    };
+    // Инициализация таблицы
+    const tbody = document.getElementById('tableBody');
+    const rows = ['Делимое', 'Делитель', 'Частное'];
+    
+    // Создаем строки таблицы
+    rows.forEach((rowName, rowIndex) => {
+        let tr = document.createElement('tr');
+        // Заголовок строки
+        let th = document.createElement('th');
+        th.textContent = rowName;
+        tr.appendChild(th);
 
-    let stats = { total: 0, correct: 0, wrong: 0, answered: new Set() };
+        // Ячейки данных
+        for(let col = 0; col < 6; col++) {
+            let td = document.createElement('td');
+            let val = tableData[col][rowIndex];
+            
+            if (val !== null) {
+                td.textContent = val;
+                td.style.fontWeight = 'bold';
+                td.style.color = '#2d3436';
+            } else {
+                let input = document.createElement('input');
+                input.type = 'number';
+                input.placeholder = '?';
+                input.dataset.row = rowIndex;
+                input.dataset.col = col;
+                input.addEventListener('input', calculateTable);
+                td.appendChild(input);
+            }
+            tr.appendChild(td);
+        }
+        tbody.appendChild(tr);
+    });
 
-    function createCard(group, index, data) {
-        const id = `${group}_${index}`;
-        const color = colors[group];
-        const cardNum = group === 311 ? index + 1 : group === 312 ? index + 5 : group === 313 ? index + 9 : index + 13;
+    // Логика калькулятора таблицы
+    function calculateTable(e) {
+        const input = e.target;
+        const col = parseInt(input.dataset.col);
+        const row = parseInt(input.dataset.row);
+        
+        // Получаем все инпуты в этой колонке
+        const inputs = document.querySelectorAll(`input[data-col="${col}"]`);
+        let values = [null, null, null]; // [Делимое, Делитель, Частное]
+        
+        inputs.forEach(inp => {
+            values[inp.dataset.row] = parseFloat(inp.value);
+        });
 
-        const container = document.createElement('div');
-        container.className = 'card-container';
-        container.innerHTML = `
-            <div class="card" id="card_${id}">
-                <div class="card-face card-front">
-                    <div class="card-number">№ ${cardNum}</div>
-                    <div class="card-status" id="status_${id}">❓</div>
-                    <div class="card-task">${data.task}</div>
-                    <div class="card-hint">👆 Нажми, чтобы увидеть ответ</div>
-                </div>
-                <div class="card-face card-back" style="background: linear-gradient(135deg, ${color[0]}, ${color[1]});">
-                    <div class="card-number">№ ${cardNum}</div>
-                    <div class="card-answer-label">Правильный ответ:</div>
-                    <div class="card-answer">${data.answer}</div>
-                    <div style="margin-top: 15px; display: flex; gap: 10px;">
-                        <button onclick="event.stopPropagation(); markAnswer('${id}', true)" style="padding: 8px 15px; border: none; border-radius: 20px; background: white; color: #4caf50; font-weight: bold; cursor: pointer; font-size: 14px;">✅ Верно</button>
-                        <button onclick="event.stopPropagation(); markAnswer('${id}', false)" style="padding: 8px 15px; border: none; border-radius: 20px; background: white; color: #f44336; font-weight: bold; cursor: pointer; font-size: 14px;">❌ Ошибка</button>
-                    </div>
-                </div>
-            </div>
-        `;
+        // Логика вычисления missing value
+        let result = null;
+        if (values[0] !== null && values[1] !== null && values[2] === null) {
+            // Есть Делимое и Делитель -> ищем Частное
+            if(values[1] !== 0) result = values[0] / values[1];
+        } else if (values[0] !== null && values[2] !== null && values[1] === null) {
+            // Есть Делимое и Частное -> ищем Делитель
+            if(values[2] !== 0) result = values[0] / values[2];
+        } else if (values[1] !== null && values[2] !== null && values[0] === null) {
+            // Есть Делитель и Частное -> ищем Делимое
+            result = values[1] * values[2];
+        }
 
-        container.addEventListener('click', function() {
-            const card = document.getElementById(`card_${id}`);
-            if (!stats.answered.has(id)) {
-                card.classList.toggle('flipped');
+        // Если нашли результат, заполняем оставшийся инпут
+        if (result !== null) {
+            // Округляем до разумного количества знаков, если это не целое
+            result = Math.round(result * 1000) / 1000; 
+            inputs.forEach(inp => {
+                if (inp.dataset.row != row && !inp.value) { 
+                     // Не перезаписываем то, что пользователь уже ввел сам
+                     // Но в данной логике мы ищем именно пустую ячейку
+                }
+            });
+            
+            // Находим конкретный инпут, который нужно заполнить
+            let targetInput = document.querySelector(`input[data-col="${col}"][data-row="${getMissingIndex(values)}"]`);
+            if(targetInput && document.activeElement !== targetInput) {
+                 targetInput.value = Number.isInteger(result) ? result : result.toFixed(2);
+                 targetInput.classList.add('correct');
+            }
+        }
+    }
+
+    function getMissingIndex(arr) {
+        return arr.findIndex(x => x === null);
+    }
+
+    // Проверка уровней
+    function checkLevel(levelNum) {
+        const levelCard = document.getElementById(`level${levelNum}`);
+        const inputs = levelCard.querySelectorAll('input');
+        let allCorrect = true;
+        let filledCount = 0;
+
+        inputs.forEach(input => {
+            const userVal = parseFloat(input.value);
+            const correctVal = parseFloat(input.dataset.answer);
+            
+            if (isNaN(userVal)) {
+                allCorrect = false;
+                input.classList.remove('correct', 'wrong');
+            } else if (userVal === correctVal) {
+                input.classList.add('correct');
+                input.classList.remove('wrong');
+                filledCount++;
+            } else {
+                input.classList.add('wrong');
+                input.classList.remove('correct');
+                allCorrect = false;
             }
         });
 
-        return container;
-    }
+        // Для уровня 3 (таблица) проверка сложнее, там просто проверяем заполненность
+        if (levelNum === 3) {
+             const tableInputs = document.querySelectorAll('.magic-table input');
+             let tableFilled = 0;
+             tableInputs.forEach(inp => { if(inp.value) tableFilled++; });
+             
+             if (tableFilled === tableInputs.length) {
+                 finishGame();
+             } else {
+                 alert("Заполни все пустые ячейки в таблице! Вводи любые два числа в столбик, третье появится само.");
+             }
+             return;
+        }
 
-    function markAnswer(id, isCorrect) {
-        if (stats.answered.has(id)) return;
-        stats.answered.add(id);
-        stats.total++;
+        if (allCorrect && filledCount === inputs.length) {
+            // Уровень пройден
+            const btn = levelCard.querySelector('.check-btn');
+            btn.textContent = "✅ Уровень пройден!";
+            btn.style.background = "#00b894";
+            btn.disabled = true;
 
-        const statusEl = document.getElementById(`status_${id}`);
-        if (isCorrect) {
-            stats.correct++;
-            statusEl.textContent = '✅';
+            // Открываем следующий уровень
+            const nextLevel = document.getElementById(`level${levelNum + 1}`);
+            if (nextLevel) {
+                setTimeout(() => {
+                    nextLevel.classList.add('active');
+                    nextLevel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 500);
+            } else {
+                finishGame();
+            }
+            
+            updateProgress(levelNum);
         } else {
-            stats.wrong++;
-            statusEl.textContent = '❌';
-        }
-
-        updateStats();
-
-        if (stats.total === 16) {
-            showFinal();
+            alert("Есть ошибки или пустые поля. Попробуй еще раз!");
         }
     }
 
-    function updateStats() {
-        document.getElementById('totalCount').textContent = stats.total;
-        document.getElementById('correctCount').textContent = stats.correct;
-        document.getElementById('wrongCount').textContent = stats.wrong;
-
-        const percent = Math.round((stats.total / 16) * 100);
-        const fill = document.getElementById('progressFill');
-        fill.style.width = percent + '%';
-        fill.textContent = percent + '%';
+    function updateProgress(level) {
+        const percent = (level / 3) * 100;
+        document.getElementById('totalProgress').style.width = percent + '%';
     }
 
-    function showFinal() {
-        const finalCard = document.getElementById('finalCard');
-        finalCard.style.display = 'block';
-        document.getElementById('finalScore').textContent = `${stats.correct}/16`;
-
-        let grade = '';
-        if (stats.correct >= 15) grade = '🏆 Оценка: 5 (Отлично!)';
-        else if (stats.correct >= 12) grade = '🥈 Оценка: 4 (Хорошо!)';
-        else if (stats.correct >= 9) grade = '🥉 Оценка: 3 (Удовлетворительно)';
-        else grade = '📚 Нужно ещё потренироваться';
-
-        document.getElementById('finalGrade').textContent = grade;
-        finalCard.scrollIntoView({ behavior: 'smooth' });
+    function finishGame() {
+        document.getElementById('totalProgress').style.width = '100%';
+        const finalMsg = document.getElementById('finalMessage');
+        finalMsg.style.display = 'block';
+        finalMsg.scrollIntoView({ behavior: 'smooth' });
+        
+        // Конфетти эффект (простой CSS/JS хак)
+        createConfetti();
     }
 
-    function resetAll() {
-        stats = { total: 0, correct: 0, wrong: 0, answered: new Set() };
-        document.querySelectorAll('.card').forEach(c => c.classList.remove('flipped'));
-        document.querySelectorAll('.card-status').forEach(s => s.textContent = '❓');
-        document.getElementById('finalCard').style.display = 'none';
-        updateStats();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+    function createConfetti() {
+        for(let i=0; i<50; i++) {
+            const conf = document.createElement('div');
+            conf.style.position = 'fixed';
+            conf.style.left = Math.random() * 100 + 'vw';
+            conf.style.top = '-10px';
+            conf.style.width = '10px';
+            conf.style.height = '10px';
+            conf.style.backgroundColor = ['#ff7675', '#74b9ff', '#55efc4', '#ffeaa7'][Math.floor(Math.random()*4)];
+            conf.style.transition = 'top 3s ease-in, transform 3s linear';
+            conf.style.zIndex = '9999';
+            document.body.appendChild(conf);
+            
+            setTimeout(() => {
+                conf.style.top = '110vh';
+                conf.style.transform = `rotate(${Math.random()*360}deg)`;
+            }, 100);
+        }
     }
-
-    // Инициализация карточек
-    Object.keys(tasks).forEach(group => {
-        const grid = document.getElementById(`grid${group}`);
-        tasks[group].forEach((data, index) => {
-            grid.appendChild(createCard(group, index, data));
-        });
-    });
 </script>
 
 </body>
