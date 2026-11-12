@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Решение уравнений — 5 класс</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            padding: 20px;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .rules-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .rules-section h2 {
+            color: #4a5568;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.4em;
+        }
+
+        .rules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .rule-card {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 2px solid #7dd3fc;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .rule-card h3 {
+            color: #0369a1;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        .rule-card .formula {
+            font-size: 1.1em;
+            color: #1e40af;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+
+        .rule-card .rule-text {
+            font-size: 0.85em;
+            color: #475569;
+            line-height: 1.4;
+        }
+
+        .rule-card .example {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed #7dd3fc;
+            font-size: 0.9em;
+            color: #0369a1;
+        }
+
+        .exercise-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .exercise-section h2 {
+            color: #4a5568;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.4em;
+        }
+
+        .equation-block {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 2px solid #fbbf24;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .equation-title {
+            font-weight: bold;
+            color: #92400e;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .equation-display {
+            font-size: 1.5em;
+            text-align: center;
+            color: #1e293b;
+            margin: 15px 0;
+            font-weight: bold;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #fbbf24;
+        }
+
+        .step-container {
+            margin-top: 15px;
+        }
+
+        .step {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #fbbf24;
+        }
+
+        .step-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .step-header h4 {
+            color: #92400e;
+            font-size: 1em;
+        }
+
+        .step-header .toggle-btn {
+            background: #fbbf24;
+            color: #92400e;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .step-header .toggle-btn:hover {
+            background: #f59e0b;
+        }
+
+        .step-content {
+            display: none;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #fbbf24;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        .hint-box {
+            background: #ecfdf5;
+            border: 2px solid #6ee7b7;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 10px 0;
+        }
+
+        .hint-box .hint-label {
+            color: #065f46;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .hint-box .hint-text {
+            color: #047857;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .question-box {
+            background: #fef3c7;
+            border: 2px solid #fcd34d;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 10px 0;
+        }
+
+        .question-box .question-label {
+            color: #92400e;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .question-box .question-text {
+            color: #b45309;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1em;
+            margin-top: 10px;
+            transition: border-color 0.3s;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: #fbbf24;
+        }
+
+        .answer-input.correct {
+            border-color: #10b981;
+            background: #ecfdf5;
+        }
+
+        .answer-input.incorrect {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .check-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+
+        .check-btn:hover {
+            background: #059669;
+        }
+
+        .feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.95em;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+        }
+
+        .feedback.incorrect {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .progress-bar {
+            background: #e5e7eb;
+            border-radius: 10px;
+            height: 20px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #10b981, #34d399);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .final-check {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border: 2px solid #60a5fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .final-check h3 {
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+
+        .final-check input {
+            padding: 10px 15px;
+            border: 2px solid #60a5fa;
+            border-radius: 8px;
+            font-size: 1.1em;
+            width: 150px;
+            text-align: center;
+        }
+
+        .final-check button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .celebration {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border-radius: 12px;
+            margin-top: 20px;
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .celebration.show {
+            display: block;
+            animation: pulse 1s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .nav-btn {
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: #7c3aed;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .tab-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: white;
+            border: 2px solid #8b5cf6;
+            color: #8b5cf6;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: #8b5cf6;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .method-hint {
+            background: #f3e8ff;
+            border: 2px solid #c084fc;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 10px 0;
+        }
+
+        .method-hint .method-label {
+            color: #6b21a8;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .method-hint .method-text {
+            color: #7e22ce;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .arrow-down {
+            text-align: center;
+            font-size: 1.5em;
+            color: #fbbf24;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧮 Решение уравнений</h1>
+            <p>Научись решать сложные уравнения самостоятельно!</p>
+        </div>
+
+        <!-- Правила -->
+        <div class="rules-section">
+            <h2>📋 Правила решения уравнений</h2>
+            <div class="rules-grid">
+                <div class="rule-card">
+                    <h3>Неизвестное слагаемое</h3>
+                    <div class="formula">x + 9 = 15</div>
+                    <div class="rule-text">Чтобы найти неизвестное слагаемое, надо из суммы отнять известное слагаемое</div>
+                    <div class="example">x = 15 − 9 = 6</div>
+                </div>
+                <div class="rule-card">
+                    <h3>Неизвестное уменьшаемое</h3>
+                    <div class="formula">x − 14 = 2</div>
+                    <div class="rule-text">Чтобы найти неизвестное уменьшаемое, надо к разности прибавить вычитаемое</div>
+                    <div class="example">x = 2 + 14 = 16</div>
+                </div>
+                <div class="rule-card">
+                    <h3>Неизвестное вычитаемое</h3>
+                    <div class="formula">5 − x = 3</div>
+                    <div class="rule-text">Чтобы найти неизвестное вычитаемое, надо от уменьшаемого отнять разность</div>
+                    <div class="example">x = 5 − 3 = 2</div>
+                </div>
+                <div class="rule-card">
+                    <h3>Неизвестный множитель</h3>
+                    <div class="formula">y · 4 = 12</div>
+                    <div class="rule-text">Чтобы найти неизвестный множитель, надо произведение разделить на известный множитель</div>
+                    <div class="example">y = 12 : 4 = 3</div>
+                </div>
+                <div class="rule-card">
+                    <h3>Неизвестное делимое</h3>
+                    <div class="formula">y : 7 = 2</div>
+                    <div class="rule-text">Чтобы найти неизвестное делимое, надо частное умножить на делитель</div>
+                    <div class="example">y = 2 · 7 = 14</div>
+                </div>
+                <div class="rule-card">
+                    <h3>Неизвестный делитель</h3>
+                    <div class="formula">8 : y = 4</div>
+                    <div class="rule-text">Чтобы найти неизвестный делитель, надо делимое разделить на частное</div>
+                    <div class="example">y = 8 : 4 = 2</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Прогресс -->
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 0%">0%</div>
+        </div>
+
+        <!-- Вкладки упражнений -->
+        <div class="tab-container">
+            <button class="tab-btn active" onclick="showTab('ex398')">Упражнение 3.98</button>
+            <button class="tab-btn" onclick="showTab('ex399')">Упражнение 3.99</button>
+        </div>
+
+        <!-- Упражнение 3.98 -->
+        <div class="tab-content active" id="ex398">
+            <div class="exercise-section">
+                <h2>Упражнение 3.98 — Найди корень уравнения</h2>
+
+                <!-- Уравнение а) -->
+                <div class="equation-block" id="eq398a">
+                    <div class="equation-title">а) Уравнение</div>
+                    <div class="equation-display">(x − 14) · 7 = 35</div>
+
+                    <div class="step-container">
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 1: Определи, что неизвестно</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="question-box">
+                                    <div class="question-label">🤔 Подумай:</div>
+                                    <div class="question-text">Посмотри на уравнение. Что здесь неизвестно — множитель, делимое или делитель? Что стоит слева от знака умножения?</div>
+                                </div>
+                                <div class="hint-box">
+                                    <div class="hint-label">💡 Подсказка:</div>
+                                    <div class="hint-text">В уравнении (x − 14) · 7 = 35 всё выражение (x − 14) — это один из множителей. 7 — другой множитель. 35 — произведение.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 2: Найди значение выражения (x − 14)</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="method-hint">
+                                    <div class="method-label">📐 Метод:</div>
+                                    <div class="method-text">Используй правило: чтобы найти неизвестный множитель, надо произведение разделить на известный множитель.</div>
+                                </div>
+                                <div class="question-box">
+                                    <div class="question-label">🤔 Реши:</div>
+                                    <div class="question-text">x − 14 = 35 : 7. Чему равно x − 14?</div>
+                                </div>
+                                <input type="number" class="answer-input" id="answer398a_step2" placeholder="Введи значение x − 14">
+                                <button class="check-btn" onclick="checkAnswer('answer398a_step2', 5, 'feedback398a_step2')">Проверить</button>
+                                <div class="feedback" id="feedback398a_step2"></div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 3: Найди x</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="method-hint">
+                                    <div class="method-label">📐 Метод:</div>
+                                    <div class="method-text">Теперь у тебя уравнение: x − 14 = 5. Здесь x — неизвестное уменьшаемое. Как его найти?</div>
+                                </div>
+                                <div class="question-box">
+                                    <div class="question-label">🤔 Реши:</div>
+                                    <div class="question-text">Используй правило: чтобы найти неизвестное уменьшаемое, надо к разности прибавить вычитаемое.</div>
+                                </div>
+                                <input type="number" class="answer-input" id="answer398a_step3" placeholder="Введи значение x">
+                                <button class="check-btn" onclick="checkAnswer('answer398a_step3', 19, 'feedback398a_step3')">Проверить</button>
+                                <div class="feedback" id="feedback398a_step3"></div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 4: Проверка</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="hint-box">
+                                    <div class="hint-label">✅ Как проверить:</div>
+                                    <div class="hint-text">Подставь найденное значение x в исходное уравнение и убедись, что равенство верное.</div>
+                                </div>
+                                <div class="question-box">
+                                    <div class="question-label">🤔 Проверь:</div>
+                                    <div class="question-text">(19 − 14) · 7 = ? · 7 = ? Должно получиться 35.</div>
+                                </div>
+                                <div class="final-check">
+                                    <h3>Ответ уравнения а):</h3>
+                                    <input type="number" id="finalAnswer398a" placeholder="x = ?">
+                                    <button onclick="checkFinalAnswer('finalAnswer398a', 19, 'feedback398a_final')">Проверить</button>
+                                    <div class="feedback" id="feedback398a_final"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Уравнение б) -->
+                <div class="equation-block" id="eq398b">
+                    <div class="equation-title">б) Уравнение</div>
+                    <div class="equation-display">22 · (z + 6) = 308</div>
+
+                    <div class="step-container">
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 1: Определи, что неизвестно</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="question-box">
+                                    <div class="question-label">🤔 Подумай:</div>
+                                    <div class="question-text">В уравнении 22 · (z + 6) = 308 что является неизвестным множителем?</div>
+                                </div>
+                                <div class="hint-box">
+                                    <div class="hint-label">💡 Подсказка:</div>
+                                    <div class="hint-text">22 — известный множитель, (z + 6) — неизвестный множитель, 308 — произведение.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 2: Найди значение выражения (z + 6)</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="method-hint">
+                                    <div class="method-label">📐 Метод:</div>
+                                    <div class="method-text">Чтобы найти неизвестный множитель, надо произведение разделить на известный множитель.</div>
+                                </div>
+                                <div class="question-box">
+                                    <div class="question-label">🤔 Реши:</div>
+                                    <div class="question-text">z + 6 = 308 : 22. Посчитай это значение.</div>
+                                </div>
+                                <input type="number" class="answer-input" id="answer398b_step2" placeholder="Введи значение z + 6">
+                                <button class="check-btn" onclick="checkAnswer('answer398b_step2', 14, 'feedback398b_step2')">Проверить</button>
+                                <div class="feedback" id="feedback398b_step2"></div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 3: Найди z</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="method-hint">
+                                    <div class="method-label">📐 Метод:</div>
+                                    <div class="method-text">Теперь у тебя уравнение: z + 6 = 14. Здесь z — неизвестное слагаемое. Как его найти?</div>
+                                </div>
+                                <div class="question-box">
+                                    <div class="question-label">🤔 Реши:</div>
+                                    <div class="question-text">Используй правило: чтобы найти неизвестное слагаемое, надо из суммы отнять известное слагаемое.</div>
+                                </div>
+                                <input type="number" class="answer-input" id="answer398b_step3" placeholder="Введи значение z">
+                                <button class="check-btn" onclick="checkAnswer('answer398b_step3', 8, 'feedback398b_step3')">Проверить</button>
+                                <div class="feedback" id="feedback398b_step3"></div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 4: Проверка</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="final-check">
+                                    <h3>Ответ уравнения б):</h3>
+                                    <input type="number" id="finalAnswer398b" placeholder="z = ?">
+                                    <button onclick="checkFinalAnswer('finalAnswer398b', 8, 'feedback398b_final')">Проверить</button>
+                                    <div class="feedback" id="feedback398b_final"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Уравнение в) -->
+                <div class="equation-block" id="eq398c">
+                    <div class="equation-title">в) Уравнение</div>
+                    <div class="equation-display">(y + 34) : 6 = 17</div>
+
+                    <div class="step-container">
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 1: Определи, что неизвестно</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="question-box">
+                                    <div class="question-label">🤔 Подумай:</div>
+                                    <div class="question-text">В уравнении (y + 34) : 6 = 17 что является неизвестным — делимое или делитель?</div>
+                                </div>
+                                <div class="hint-box">
+                                    <div class="hint-label">💡 Подсказка:</div>
+                                    <div class="hint-text">(y + 34) — это делимое (то, что делят), 6 — делитель, 17 — частное.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 2: Найди значение выражения (y + 34)</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="method-hint">
+                                    <div class="method-label">📐 Метод:</div>
+                                    <div class="method-text">Чтобы найти неизвестное делимое, надо частное умножить на делитель.</div>
+                                </div>
+                                <div class="question-box">
+                                    <div class="question-label">🤔 Реши:</div>
+                                    <div class="question-text">y + 34 = 17 · 6. Посчитай это значение.</div>
+                                </div>
+                                <input type="number" class="answer-input" id="answer398c_step2" placeholder="Введи значение y + 34">
+                                <button class="check-btn" onclick="checkAnswer('answer398c_step2', 102, 'feedback398c_step2')">Проверить</button>
+                                <div class="feedback" id="feedback398c_step2"></div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 3: Найди y</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="method-hint">
+                                    <div class="method-label">📐 Метод:</div>
+                                    <div class="method-text">Теперь у тебя уравнение: y + 34 = 102. Здесь y — неизвестное слагаемое.</div>
+                                </div>
+                                <div class="question-box">
+                                    <div class="question-label">🤔 Реши:</div>
+                                    <div class="question-text">Используй правило: чтобы найти неизвестное слагаемое, надо из суммы отнять известное слагаемое.</div>
+                                </div>
+                                <input type="number" class="answer-input" id="answer398c_step3" placeholder="Введи значение y">
+                                <button class="check-btn" onclick="checkAnswer('answer398c_step3', 68, 'feedback398c_step3')">Проверить</button>
+                                <div class="feedback" id="feedback398c_step3"></div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 4: Проверка</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="final-check">
+                                    <h3>Ответ уравнения в):</h3>
+                                    <input type="number" id="finalAnswer398c" placeholder="y = ?">
+                                    <button onclick="checkFinalAnswer('finalAnswer398c', 68, 'feedback398c_final')">Проверить</button>
+                                    <div class="feedback" id="feedback398c_final"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Уравнение г) -->
+                <div class="equation-block" id="eq398d">
+                    <div class="equation-title">г) Уравнение</div>
+                    <div class="equation-display">144 : (y − 7) = 36</div>
+
+                    <div class="step-container">
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 1: Определи, что неизвестно</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="question-box">
+                                    <div class="question-label">🤔 Подумай:</div>
+                                    <div class="question-text">В уравнении 144 : (y − 7) = 36 что является неизвестным — делимое или делитель?</div>
+                                </div>
+                                <div class="hint-box">
+                                    <div class="hint-label">💡 Подсказка:</div>
+                                    <div class="hint-text">144 — делимое, (y − 7) — неизвестный делитель, 36 — частное.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 2: Найди значение выражения (y − 7)</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="method-hint">
+                                    <div class="method-label">📐 Метод:</div>
+                                    <div class="method-text">Чтобы найти неизвестный делитель, надо делимое разделить на частное.</div>
+                                </div>
+                                <div class="question-box">
+                                    <div class="question-label">🤔 Реши:</div>
+                                    <div class="question-text">y − 7 = 144 : 36. Посчитай это значение.</div>
+                                </div>
+                                <input type="number" class="answer-input" id="answer398d_step2" placeholder="Введи значение y − 7">
+                                <button class="check-btn" onclick="checkAnswer('answer398d_step2', 4, 'feedback398d_step2')">Проверить</button>
+                                <div class="feedback" id="feedback398d_step2"></div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 3: Найди y</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="method-hint">
+                                    <div class="method-label">📐 Метод:</div>
+                                    <div class="method-text">Теперь у тебя уравнение: y − 7 = 4. Здесь y — неизвестное уменьшаемое.</div>
+                                </div>
+                                <div class="question-box">
+                                    <div class="question-label">🤔 Реши:</div>
+                                    <div class="question-text">Используй правило: чтобы найти неизвестное уменьшаемое, надо к разности прибавить вычитаемое.</div>
+                                </div>
+                                <input type="number" class="answer-input" id="answer398d_step3" placeholder="Введи значение y">
+                                <button class="check-btn" onclick="checkAnswer('answer398d_step3', 11, 'feedback398d_step3')">Проверить</button>
+                                <div class="feedback" id="feedback398d_step3"></div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 4: Проверка</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="final-check">
+                                    <h3>Ответ уравнения г):</h3>
+                                    <input type="number" id="finalAnswer398d" placeholder="y = ?">
+                                    <button onclick="checkFinalAnswer('finalAnswer398d', 11, 'feedback398d_final')">Проверить</button>
+                                    <div class="feedback" id="feedback398d_final"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Упражнение 3.99 -->
+        <div class="tab-content" id="ex399">
+            <div class="exercise-section">
+                <h2>Упражнение 3.99 — Реши уравнение</h2>
+
+                <!-- Уравнение а) -->
+                <div class="equation-block" id="eq399a">
+                    <div class="equation-title">а) Уравнение</div>
+                    <div class="equation-display">29x + 25 = 83</div>
+
+                    <div class="step-container">
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 1: Определи порядок действий</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="question-box">
+                                    <div class="question-label">🤔 Подумай:</div>
+                                    <div class="question-text">В уравнении 29x + 25 = 83 что выполняется сначала — умножение или сложение? Что является неизвестным?</div>
+                                </div>
+                                <div class="hint-box">
+                                    <div class="hint-label">💡 Подсказка:</div>
+                                    <div class="hint-text">29x — это произведение (29 · x). Всё уравнение можно прочитать как: «произведение 29 и x, плюс 25, равно 83». Сначала найди значение 29x.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 2: Найди значение 29x</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="method-hint">
+                                    <div class="method-label">📐 Метод:</div>
+                                    <div class="method-text">29x — это неизвестное слагаемое. Чтобы найти неизвестное слагаемое, надо из суммы отнять известное слагаемое.</div>
+                                </div>
+                                <div class="question-box">
+                                    <div class="question-label">🤔 Реши:</div>
+                                    <div class="question-text">29x = 83 − 25. Посчитай это значение.</div>
+                                </div>
+                                <input type="number" class="answer-input" id="answer399a_step2" placeholder="Введи значение 29x">
+                                <button class="check-btn" onclick="checkAnswer('answer399a_step2', 58, 'feedback399a_step2')">Проверить</button>
+                                <div class="feedback" id="feedback399a_step2"></div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 3: Найди x</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="method-hint">
+                                    <div class="method-label">📐 Метод:</div>
+                                    <div class="method-text">Теперь у тебя уравнение: 29x = 58, то есть 29 · x = 58. Здесь x — неизвестный множитель.</div>
+                                </div>
+                                <div class="question-box">
+                                    <div class="question-label">🤔 Реши:</div>
+                                    <div class="question-text">Используй правило: чтобы найти неизвестный множитель, надо произведение разделить на известный множитель.</div>
+                                </div>
+                                <input type="number" class="answer-input" id="answer399a_step3" placeholder="Введи значение x">
+                                <button class="check-btn" onclick="checkAnswer('answer399a_step3', 2, 'feedback399a_step3')">Проверить</button>
+                                <div class="feedback" id="feedback399a_step3"></div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 4: Проверка</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="final-check">
+                                    <h3>Ответ уравнения а):</h3>
+                                    <input type="number" id="finalAnswer399a" placeholder="x = ?">
+                                    <button onclick="checkFinalAnswer('finalAnswer399a', 2, 'feedback399a_final')">Проверить</button>
+                                    <div class="feedback" id="feedback399a_final"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Уравнение б) -->
+                <div class="equation-block" id="eq399b">
+                    <div class="equation-title">б) Уравнение</div>
+                    <div class="equation-display">55 : z + 19 = 30</div>
+
+                    <div class="step-container">
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 1: Определи порядок действий</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="question-box">
+                                    <div class="question-label">🤔 Подумай:</div>
+                                    <div class="question-text">В уравнении 55 : z + 19 = 30 что выполняется сначала — деление или сложение?</div>
+                                </div>
+                                <div class="hint-box">
+                                    <div class="hint-label">💡 Подсказка:</div>
+                                    <div class="hint-text">55 : z — это частное. Всё уравнение: «частное от деления 55 на z, плюс 19, равно 30». Сначала найди значение 55 : z.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 2: Найди значение 55 : z</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="method-hint">
+                                    <div class="method-label">📐 Метод:</div>
+                                    <div class="method-text">55 : z — это неизвестное слагаемое. Чтобы найти неизвестное слагаемое, надо из суммы отнять известное слагаемое.</div>
+                                </div>
+                                <div class="question-box">
+                                    <div class="question-label">🤔 Реши:</div>
+                                    <div class="question-text">55 : z = 30 − 19. Посчитай это значение.</div>
+                                </div>
+                                <input type="number" class="answer-input" id="answer399b_step2" placeholder="Введи значение 55 : z">
+                                <button class="check-btn" onclick="checkAnswer('answer399b_step2', 11, 'feedback399b_step2')">Проверить</button>
+                                <div class="feedback" id="feedback399b_step2"></div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 3: Найди z</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="method-hint">
+                                    <div class="method-label">📐 Метод:</div>
+                                    <div class="method-text">Теперь у тебя уравнение: 55 : z = 11. Здесь z — неизвестный делитель.</div>
+                                </div>
+                                <div class="question-box">
+                                    <div class="question-label">🤔 Реши:</div>
+                                    <div class="question-text">Используй правило: чтобы найти неизвестный делитель, надо делимое разделить на частное.</div>
+                                </div>
+                                <input type="number" class="answer-input" id="answer399b_step3" placeholder="Введи значение z">
+                                <button class="check-btn" onclick="checkAnswer('answer399b_step3', 5, 'feedback399b_step3')">Проверить</button>
+                                <div class="feedback" id="feedback399b_step3"></div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 4: Проверка</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="final-check">
+                                    <h3>Ответ уравнения б):</h3>
+                                    <input type="number" id="finalAnswer399b" placeholder="z = ?">
+                                    <button onclick="checkFinalAnswer('finalAnswer399b', 5, 'feedback399b_final')">Проверить</button>
+                                    <div class="feedback" id="feedback399b_final"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Уравнение в) -->
+                <div class="equation-block" id="eq399c">
+                    <div class="equation-title">в) Уравнение</div>
+                    <div class="equation-display">84 − 13x = 19</div>
+
+                    <div class="step-container">
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 1: Определи порядок действий</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="question-box">
+                                    <div class="question-label">🤔 Подумай:</div>
+                                    <div class="question-text">В уравнении 84 − 13x = 19 что выполняется сначала — умножение или вычитание? Что является неизвестным?</div>
+                                </div>
+                                <div class="hint-box">
+                                    <div class="hint-label">💡 Подсказка:</div>
+                                    <div class="hint-text">13x — это произведение (13 · x). Всё уравнение: «84 минус произведение 13 и x равно 19». Здесь 13x — неизвестное вычитаемое.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 2: Найди значение 13x</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="method-hint">
+                                    <div class="method-label">📐 Метод:</div>
+                                    <div class="method-text">13x — это неизвестное вычитаемое. Чтобы найти неизвестное вычитаемое, надо от уменьшаемого отнять разность.</div>
+                                </div>
+                                <div class="question-box">
+                                    <div class="question-label">🤔 Реши:</div>
+                                    <div class="question-text">13x = 84 − 19. Посчитай это значение.</div>
+                                </div>
+                                <input type="number" class="answer-input" id="answer399c_step2" placeholder="Введи значение 13x">
+                                <button class="check-btn" onclick="checkAnswer('answer399c_step2', 65, 'feedback399c_step2')">Проверить</button>
+                                <div class="feedback" id="feedback399c_step2"></div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 3: Найди x</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="method-hint">
+                                    <div class="method-label">📐 Метод:</div>
+                                    <div class="method-text">Теперь у тебя уравнение: 13x = 65, то есть 13 · x = 65. Здесь x — неизвестный множитель.</div>
+                                </div>
+                                <div class="question-box">
+                                    <div class="question-label">🤔 Реши:</div>
+                                    <div class="question-text">Используй правило: чтобы найти неизвестный множитель, надо произведение разделить на известный множитель.</div>
+                                </div>
+                                <input type="number" class="answer-input" id="answer399c_step3" placeholder="Введи значение x">
+                                <button class="check-btn" onclick="checkAnswer('answer399c_step3', 5, 'feedback399c_step3')">Проверить</button>
+                                <div class="feedback" id="feedback399c_step3"></div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 4: Проверка</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="final-check">
+                                    <h3>Ответ уравнения в):</h3>
+                                    <input type="number" id="finalAnswer399c" placeholder="x = ?">
+                                    <button onclick="checkFinalAnswer('finalAnswer399c', 5, 'feedback399c_final')">Проверить</button>
+                                    <div class="feedback" id="feedback399c_final"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Уравнение г) -->
+                <div class="equation-block" id="eq399d">
+                    <div class="equation-title">г) Уравнение</div>
+                    <div class="equation-display">y : 6 − 18 = 14</div>
+
+                    <div class="step-container">
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 1: Определи порядок действий</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="question-box">
+                                    <div class="question-label">🤔 Подумай:</div>
+                                    <div class="question-text">В уравнении y : 6 − 18 = 14 что выполняется сначала — деление или вычитание?</div>
+                                </div>
+                                <div class="hint-box">
+                                    <div class="hint-label">💡 Подсказка:</div>
+                                    <div class="hint-text">y : 6 — это частное. Всё уравнение: «частное от деления y на 6, минус 18, равно 14». Здесь y : 6 — неизвестное уменьшаемое.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 2: Найди значение y : 6</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="method-hint">
+                                    <div class="method-label">📐 Метод:</div>
+                                    <div class="method-text">y : 6 — это неизвестное уменьшаемое. Чтобы найти неизвестное уменьшаемое, надо к разности прибавить вычитаемое.</div>
+                                </div>
+                                <div class="question-box">
+                                    <div class="question-label">🤔 Реши:</div>
+                                    <div class="question-text">y : 6 = 14 + 18. Посчитай это значение.</div>
+                                </div>
+                                <input type="number" class="answer-input" id="answer399d_step2" placeholder="Введи значение y : 6">
+                                <button class="check-btn" onclick="checkAnswer('answer399d_step2', 32, 'feedback399d_step2')">Проверить</button>
+                                <div class="feedback" id="feedback399d_step2"></div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 3: Найди y</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="method-hint">
+                                    <div class="method-label">📐 Метод:</div>
+                                    <div class="method-text">Теперь у тебя уравнение: y : 6 = 32. Здесь y — неизвестное делимое.</div>
+                                </div>
+                                <div class="question-box">
+                                    <div class="question-label">🤔 Реши:</div>
+                                    <div class="question-text">Используй правило: чтобы найти неизвестное делимое, надо частное умножить на делитель.</div>
+                                </div>
+                                <input type="number" class="answer-input" id="answer399d_step3" placeholder="Введи значение y">
+                                <button class="check-btn" onclick="checkAnswer('answer399d_step3', 192, 'feedback399d_step3')">Проверить</button>
+                                <div class="feedback" id="feedback399d_step3"></div>
+                            </div>
+                        </div>
+
+                        <div class="step">
+                            <div class="step-header" onclick="toggleStep(this)">
+                                <h4>Шаг 4: Проверка</h4>
+                                <button class="toggle-btn">💡 Подсказка</button>
+                            </div>
+                            <div class="step-content">
+                                <div class="final-check">
+                                    <h3>Ответ уравнения г):</h3>
+                                    <input type="number" id="finalAnswer399d" placeholder="y = ?">
+                                    <button onclick="checkFinalAnswer('finalAnswer399d', 192, 'feedback399d_final')">Проверить</button>
+                                    <div class="feedback" id="feedback399d_final"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Празднование -->
+        <div class="celebration" id="celebration">
+            🎉 Поздравляем! Ты решил все уравнения! 🎉<br>
+            <span style="font-size: 0.8em;">Ты отлично справился с заданием!</span>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="nav-btn" onclick="resetAll()">🔄 Начать заново</button>
+        </div>
+    </div>
+
+    <script>
+        let correctAnswers = 0;
+        const totalAnswers = 24; // 8 уравнений × 3 проверяемых шага
+
+        function toggleStep(header) {
+            const content = header.nextElementSibling;
+            content.classList.toggle('active');
+        }
+
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function checkAnswer(inputId, correctAnswer, feedbackId) {
+            const input = document.getElementById(inputId);
+            const feedback = document.getElementById(feedbackId);
+            const userAnswer = parseInt(input.value);
+
+            if (isNaN(userAnswer)) {
+                feedback.textContent = '⚠️ Введи число!';
+                feedback.className = 'feedback show incorrect';
+                return;
+            }
+
+            if (userAnswer === correctAnswer) {
+                input.classList.remove('incorrect');
+                input.classList.add('correct');
+                feedback.textContent = '✅ Правильно! Отличная работа!';
+                feedback.className = 'feedback show correct';
+                correctAnswers++;
+                updateProgress();
+            } else {
+                input.classList.remove('correct');
+                input.classList.add('incorrect');
+                feedback.textContent = '❌ Неправильно. Попробуй ещё раз! Подумай, какое правило нужно применить.';
+                feedback.className = 'feedback show incorrect';
+            }
+        }
+
+        function checkFinalAnswer(inputId, correctAnswer, feedbackId) {
+            const input = document.getElementById(inputId);
+            const feedback = document.getElementById(feedbackId);
+            const userAnswer = parseInt(input.value);
+
+            if (isNaN(userAnswer)) {
+                feedback.textContent = '⚠️ Введи число!';
+                feedback.className = 'feedback show incorrect';
+                return;
+            }
+
+            if (userAnswer === correctAnswer) {
+                input.classList.remove('incorrect');
+                input.classList.add('correct');
+                feedback.textContent = '✅ Правильно! Уравнение решено верно!';
+                feedback.className = 'feedback show correct';
+                correctAnswers++;
+                updateProgress();
+                checkCompletion();
+            } else {
+                input.classList.remove('correct');
+                input.classList.add('incorrect');
+                feedback.textContent = '❌ Неправильно. Проверь свои вычисления ещё раз.';
+                feedback.className = 'feedback show incorrect';
+            }
+        }
+
+        function updateProgress() {
+            const percentage = Math.round((correctAnswers / totalAnswers) * 100);
+            const progressFill = document.getElementById('progressFill');
+            progressFill.style.width = percentage + '%';
+            progressFill.textContent = percentage + '%';
+        }
+
+        function checkCompletion() {
+            if (correctAnswers >= totalAnswers) {
+                document.getElementById('celebration').classList.add('show');
+            }
+        }
+
+        function resetAll() {
+            correctAnswers = 0;
+            updateProgress();
+            document.getElementById('celebration').classList.remove('show');
+
+            document.querySelectorAll('.answer-input').forEach(input => {
+                input.value = '';
+                input.classList.remove('correct', 'incorrect');
+            });
+
+            document.querySelectorAll('.feedback').forEach(feedback => {
+                feedback.textContent = '';
+                feedback.className = 'feedback';
+            });
+
+            document.querySelectorAll('.step-content').forEach(content => {
+                content.classList.remove('active');
+            });
+        }
+    </script>
+</body>
+</html>
